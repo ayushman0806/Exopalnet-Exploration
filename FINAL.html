@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronicles of Exoplanet Exploration</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            justify-content: center;
+        }
+        #universe {
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            position: relative;
+            overflow: hidden;
+        }
+        #stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 130px 80px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 190px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 220px 200px, #ddd, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: moveStars 10s linear infinite;
+        }
+        @keyframes moveStars {
+            from {
+                transform: translateY(1);
+            }
+            to {
+                transform: translateY(-100px);
+            }
+        }
+        .exoplanet {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            animation: shimmer 1.5s infinite alternate-reverse;
+        }
+        @keyframes shimmer {
+            0% {
+                opacity: 0.5;
+                box-shadow: 0 0 2px 1px rgba(255, 255, 255, 0.1);
+            }
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 4px 2px rgba(255, 255, 255, 0.4);
+            }
+        }
+        #info-panel {
+            position: fixed;
+            top: 0;
+            right: -60%;
+            width: 60%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: right 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        #planet-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: white;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+        }
+        #close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1><u>Chronicles of Exoplanet Exploration</u></h1>
+    <div id="universe">
+        <div id="stars"></div>
+    </div>
+    <div id="info-panel">
+        <button id="close-button">&times;</button>
+        <img id="planet-image" src="/api/placeholder/600/400" alt="Exoplanet">
+        <div id="planet-info"></div>
+    </div>
+   
+    <script>
+        const universe = document.getElementById('universe');
+        const infoPanel = document.getElementById('info-panel');
+        const planetImage = document.getElementById('planet-image');
+        const planetInfo = document.getElementById('planet-info');
+        const closeButton = document.getElementById('close-button');
+
+        const exoplanets = [
+            { 
+                name: "Kepler-16b", 
+                image: "/api/placeholder/600/400?text=Kepler-16b", 
+                info: "A circumbinary planet, often called 'Tatooine' after Luke Skywalker's home planet in Star Wars.",
+                discovered: "2011",
+                discoverer: "Kepler Space Telescope team",
+                distance: "200 light-years",
+                sustainability: "Not suitable for human life due to its gaseous nature and extreme temperatures."
+            },
+            { 
+                name: "HD 209458 b (Osiris)", 
+                image: "/api/placeholder/600/400?text=HD+209458+b", 
+                info: "One of the first exoplanets to have its atmosphere detected. It's a 'hot Jupiter' type planet.",
+                discovered: "1999",
+                discoverer: "David Charbonneau, Robert Brown, and others",
+                distance: "150 light-years",
+                sustainability: "Not sustainable for human life due to extreme heat and gas giant composition."
+            },
+            { 
+                name: "Gliese 581 g", 
+                image: "/api/placeholder/600/400?text=Gliese+581+g", 
+                info: "Once considered one of the most promising candidates for potential habitability.",
+                discovered: "2010",
+                discoverer: "Steven S. Vogt and R. Paul Butler",
+                distance: "20 light-years",
+                sustainability: "Potentially habitable, but its existence is still debated in the scientific community."
+            },
+            { 
+                name: "TRAPPIST-1e", 
+                image: "/api/placeholder/600/400?text=TRAPPIST-1e", 
+                info: "Part of the TRAPPIST-1 system, which contains seven Earth-sized planets.",
+                discovered: "2017",
+                discoverer: "TRAPPIST telescope team",
+                distance: "39 light-years",
+                sustainability: "Considered one of the most promising for potential habitability outside our solar system."
+            },
+            { 
+                name: "Proxima Centauri b", 
+                image: "/api/placeholder/600/400?text=Proxima+Centauri+b", 
+                info: "The closest known exoplanet to the Solar System.",
+                discovered: "2016",
+                discoverer: "European Southern Observatory",
+                distance: "4.2 light-years",
+                sustainability: "Potentially habitable, but faces challenges due to its star's volatile nature."
+            },
+            { 
+                name: "WASP-121b", 
+                image: "/api/placeholder/600/400?text=WASP-121b", 
+                info: "An ultrahot Jupiter with a stratosphere.",
+                discovered: "2015",
+                discoverer: "SuperWASP consortium",
+                distance: "850 light-years",
+                sustainability: "Not sustainable for human life due to extreme temperatures and gas giant composition."
+            },
+            { 
+                name: "K2-18b", 
+                image: "/api/placeholder/600/400?text=K2-18b", 
+                info: "A super-Earth exoplanet with potential water vapor in its atmosphere.",
+                discovered: "2015",
+                discoverer: "K2 mission team",
+                distance: "124 light-years",
+                sustainability: "Potentially habitable, but much larger than Earth, which could affect surface conditions."
+            },
+            { 
+                name: "TOI 700 d", 
+                image: "/api/placeholder/600/400?text=TOI+700+d", 
+                info: "The first Earth-size habitable-zone planet discovered by TESS.",
+                discovered: "2020",
+                discoverer: "TESS team",
+                distance: "101.4 light-years",
+                sustainability: "Considered potentially habitable, orbiting within its star's conservative habitable zone."
+            },
+            { 
+                name: "51 Pegasi b", 
+                image: "/api/placeholder/600/400?text=51+Pegasi+b", 
+                info: "The first confirmed exoplanet orbiting a main-sequence star.",
+                discovered: "1995",
+                discoverer: "Michel Mayor and Didier Queloz",
+                distance: "50.9 light-years",
+                sustainability: "Not sustainable for human life as it's a hot Jupiter-type planet."
+            },
+            { 
+                name: "LHS 1140b", 
+                image: "/api/placeholder/600/400?text=LHS+1140b", 
+                info: "A super-Earth exoplanet that orbits in the habitable zone of its star.",
+                discovered: "2017",
+                discoverer: "MEarth project",
+                distance: "40 light-years",
+                sustainability: "Considered one of the best candidates for habitability due to its size and orbit."
+            }
+        ];
+
+        // Create exoplanet representations
+        exoplanets.forEach((planet, index) => {
+            const exoplanet = document.createElement('div');
+            exoplanet.className = 'exoplanet';
+            exoplanet.style.left = `${Math.random() * 90 + 5}%`;
+            exoplanet.style.top = `${Math.random() * 90 + 5}%`;
+            exoplanet.addEventListener('click', () => showExoplanetInfo(index));
+            universe.appendChild(exoplanet);
+        });
+
+        function showExoplanetInfo(index) {
+            const planet = exoplanets[index];
+            
+            planetImage.src = planet.image;
+            planetImage.alt = planet.name;
+            planetInfo.innerHTML = `
+                <h2>${planet.name}</h2>
+                <p>${planet.info}</p>
+                <p><strong>Discovered:</strong> ${planet.discovered}</p>
+                <p><strong>Discoverer:</strong> ${planet.discoverer}</p>
+                <p><strong>Distance from Earth:</strong> ${planet.distance}</p>
+                <p><strong>Sustainability for human life:</strong> ${planet.sustainability}</p>
+            `;
+            
+            infoPanel.style.right = '0';
+        }
+
+        // Close info panel when clicking on close button
+        closeButton.addEventListener('click', () => {
+            infoPanel.style.right = '-60%';
+        });
+    </script>
+</body>
+</html>
